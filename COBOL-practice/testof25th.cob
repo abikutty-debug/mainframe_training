@@ -1,0 +1,63 @@
+IDENTIFICATION DIVISION.
+PROGRAM-ID. FRAUD.
+
+DATA DIVISION.
+WORKING-STORAGE SECTION.
+
+01 N PIC 99.
+01 I PIC 99.
+01 ACTUAL PIC X(5).
+01 PREDICT PIC X(5).
+
+01 TP PIC 999 VALUE 0.
+01 FP PIC 999 VALUE 0.
+01 TN PIC 999 VALUE 0.
+01 FN PIC 999 VALUE 0.
+
+01 P PIC 9V99 VALUE 0.
+01 R PIC 9V99 VALUE 0.
+01 DEN PIC 999.
+
+PROCEDURE DIVISION.
+    ACCEPT N
+
+    PERFORM VARYING I FROM 1 BY 1
+        UNTIL I > N
+
+        ACCEPT ACTUAL
+        ACCEPT PREDICT
+
+        IF ACTUAL = "FRAUD"
+            IF PREDICT = "FLAG"
+                ADD 1 TO TP
+            ELSE
+                ADD 1 TO FN
+            END-IF
+        ELSE
+            IF PREDICT = "FLAG"
+                ADD 1 TO FP
+            ELSE
+                ADD 1 TO TN
+            END-IF
+        END-IF
+
+    END-PERFORM
+
+    COMPUTE DEN = TP + FP
+    IF DEN > 0
+        COMPUTE P ROUNDED = TP / DEN
+    END-IF
+
+    COMPUTE DEN = TP + FN
+    IF DEN > 0
+        COMPUTE R ROUNDED = TP / DEN
+    END-IF
+
+    DISPLAY "TP = " TP
+    DISPLAY "FP = " FP
+    DISPLAY "TN = " TN
+    DISPLAY "FN = " FN
+    DISPLAY "Precision = " P
+    DISPLAY "Recall = " R
+
+    STOP RUN.
